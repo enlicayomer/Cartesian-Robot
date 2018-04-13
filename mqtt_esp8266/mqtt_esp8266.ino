@@ -28,6 +28,7 @@
 #include <Servo.h>
 
 Servo servo1;
+Servo servo2;
 int Index;
 
 # define EN D8 // stepper motor enable , active low
@@ -38,13 +39,14 @@ int Index;
 # define Y_STP D3 // y -axis stepper control
 # define Z_STP D4 // z -axis stepper control
 # define s1 D0 // z -axis stepper control
+# define s2 D1 // z -axis stepper control
 # define hiz 600 // z -axis stepper control
 // Update these with values suitable for your network.
 
-//const char* ssid = "G4_9351";
-//const char* password = "omer1234";
-const char* ssid = "YbsEem2014";
-const char* password = "15963214789bmo";
+const char* ssid = "G4_9351";
+const char* password = "omer1234";
+//const char* ssid = "YbsEem2014";
+//const char* password = "15963214789bmo";
 //const char* ssid = "ZyXEL_61CC";
 //const char* password = "Yusuf326";
 const char* mqtt_server = "broker.mqtt-dashboard.com";
@@ -74,11 +76,9 @@ void setup() {
   client.setServer(mqtt_server, 1883);
   client.setCallback(callback);
   servo1.attach(s1);
-  servo1.write(180);
- // for(int i=0; i<180; i+=15)
-//{
-  //servo2.write(i);
-//}
+  servo2.attach(s2);
+  servo1.write(70);
+  servo2.write(0);
 }
 void setup_wifi() {
   delay(10);
@@ -156,14 +156,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
    if ((char)payload[0] == '7') {
 
-  servo1.write(180);
+  servo1.write(0);
+  servo2.write(70);
 
       
     } 
 
     if ((char)payload[0] == '8') {
 
-  servo1.write(0);
+  for(int i=0; i<7; i++)
+  {
+    servo1.write(i*10);
+  servo2.write(70-(i*10));
+    delay(250);
+  }
+  
 
       
     } 
