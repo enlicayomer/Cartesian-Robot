@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Gömülü Sistemler Final</title>
+    <link href="/bootstrap.min.css" rel="stylesheet">
+    <link href="/style.css" rel="stylesheet">
+    <script src="/jquery-1.10.2.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body>
+<div id="main-content" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">GÖmülü Sistemler dersi final:</label>
+                    <button id="connect" type="button">Snucuya baglan</button>
+                    <button id="disconnect" type="button" disabled="disabled">Bitir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+<!--         <div class="col-md-12"> -->
+<!--             <table id="chat"> -->
+<!--                 <thead> -->
+<!--                 <tr> -->
+<!--                     <th>Komut Dizini</th> -->
+<!--                 </tr> -->
+<!--                 </thead> -->
+<!--                 <tbody id="helloworldmessage"> -->
+<!--                 </tbody> -->
+<!--             </table> -->
+<!--         </div> -->
+            <div class="row">
+        
+        <div class="col-md-6">
+            <form class="form-inline">
+<!--                 <div class="form-group"> -->
+<!--                     <textarea id="user" placeholder="mesaj gir" required></textarea> -->
+<!--                 </div> -->	
+                <button id="mtr1" onmousedown="move('1')" onmouseup="moveRemove()">X+</button>
+                <button id="mtr11" onmousedown="move('2')" onmouseup="moveRemove()">X-</button>
+                <hr>
+                <button id="mtr2" onmousedown="move('3')" onmouseup="moveRemove()">Y+</button>
+                <button id="mtr22" onmousedown="move('4')" onmouseup="moveRemove()">Y-</button>
+                <hr>
+                <button id="mtr3" onmousedown="move('5')" onmouseup="moveRemove()">Z+</button>
+                <button id="mtr33" onmousedown="move('6')" onmouseup="moveRemove()">Z-</button>
+                <hr>
+                <button id="grp1" onclick="konveyor('o')">Gripper+</button>
+                <button id="grp2" onclick="konveyor('c')">Gripper-</button>
+                <hr>
+                <button id="grp1" onclick="konveyor('7')">Konveyor Stop</button>
+                <button id="grp1" onclick="konveyor('8')">Konveyor Start</button>
+                <hr>
+                <button id="grp1" onclick="konveyor('u')">Konveyor Up</button>
+                <button id="grp1" onclick="konveyor('d')">Konveyor Down</button>
+                
+                <hr>
+                <button id="grp1" onclick="moveOto()">Oto Pilota Al</button>
+            </form>
+        </div>
+        </div>
+    </div>
+ 
+</div>
+
+
+<script type="text/javascript">
+
+var mtr1;
+
+function move(val)
+{
+	
+	mtr1= setInterval(function(){
+
+	    var settings = {
+	    		"async": true,
+	    		"crossDomain": true,
+	    		"url": "http://127.0.0.1:8080/move?eks="+val,
+	    		"method": "GET",
+	    		"headers": {
+	    		"cache-control": "no-cache"
+	    		},
+	    		}
+	    		
+	    		$.ajax(settings).done(function (response) {
+	    		console.log(response);
+	    		});
+     }, 220);
+	
+}
+
+function roboDown(i) {
+	console.log("down");
+	var int= setInterval(function(){
+
+	    var settings = {
+	    		"async": true,
+	    		"crossDomain": true,
+	    		"url": "http://127.0.0.1:8080/move?eks=4",
+	    		"method": "GET",
+	    		"headers": {
+	    		"cache-control": "no-cache"
+	    		},
+	    		}
+	    		
+	    		$.ajax(settings).done(function (response) {
+	    		console.log(response);
+	    		});
+	    i--
+	    if(i==30)
+	    	konveyor("o");
+	    if(i==0)
+	    {
+	    	clearInterval(int);
+	    	konveyor("c");
+	    	roboUp(85);
+	    }
+     }, 220);
+}
+
+function roboUp(i) {
+	console.log("up");
+
+	var int= setInterval(function(){
+
+	    var settings = {
+	    		"async": true,
+	    		"crossDomain": true,
+	    		"url": "http://127.0.0.1:8080/move?eks=3",
+	    		"method": "GET",
+	    		"headers": {
+	    		"cache-control": "no-cache"
+	    		},
+	    		}
+	    		
+	    		$.ajax(settings).done(function (response) {
+	    		console.log(response);
+	    		});
+	    i-- || clearInterval(int);
+     }, 220);
+}
+
+function moveOto(){
+	roboDown(74);
+	konveyor("o");
+	roboDown(10);
+	konveyor("c");
+	roboUp(85);
+	
+}
+
+
+function moveRemove(val){
+    clearInterval(mtr1);
+	
+}
+
+
+function konveyor(val)
+{
+	console.log("konv");
+
+	 var settings = {
+	    		"async": true,
+	    		"crossDomain": true,
+	    		"url": "http://127.0.0.1:8081/move?eks="+val,
+	    		"method": "GET",
+	    		}
+	    		
+	    		$.ajax(settings).done(function (response) {
+	    		console.log(response);
+	    		});
+}
+</script>
+</body>
+</html>
